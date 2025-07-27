@@ -63,27 +63,24 @@ def get_carbs(cals, protein, fats):
     carbs = carbs_calories / 4  # 1 gram of carbohydrate = 4 calories
     return carbs
 
+#wraps questionary prompts in a seperate function to get rid of repetitive code
+def get_selection(prompt, choices):
+    selection = questionary.select(prompt, choices=choices).ask()
+    while selection is None:
+        print("Please make a selection.")
+        selection = questionary.select(prompt, choices=choices).ask()
+    return selection
+
 #main function asks for user metrics to calculate daily calorie and macronutrient needs
 def main():
     print("Welcome to my calorie and macronutrient calculator!\nPlease answer the following questions to get your daily calorie and macronutrient needs.\n")
     age = get_float_input("Please enter your age in years: ")
     
     #questionary creates a dropdown to avoid spelling errors and ensure consistent input
-    gender = questionary.select("Please select your gender:", choices=["Male", "Female"]).ask()
-    while gender is None: #error handling in case user cancels the questionary prompt
-        print("Please make a selection.")
-        gender = questionary.select("Please select your gender:", choices=["Male", "Female"]).ask()
+    gender = get_selection("Please select your gender:", ["Male", "Female"])
     
-    height_units = questionary.select(
-        "Please select your height units:",
-        choices=["Centimeters (cm)", "Feet and Inches (ft/in)"]
-    ).ask()
-    while height_units is None:
-        print("Please make a selection.")
-        height_units = questionary.select(
-            "Please select your height units:",
-            choices=["Centimeters (cm)", "Feet and Inches (ft/in)"]
-        ).ask()
+    height_units = get_selection("Please select your height units:", ["Centimeters (cm)", "Feet and Inches (ft/in)"])
+
     
     #converts height units for ease of use
     if height_units == "Centimeters (cm)":
@@ -94,57 +91,30 @@ def main():
         height = convert_to_cm(feet, inches)
     
     #user inputs weight and selects units
-    weight_units = questionary.select(
-        "Please select your weight units:",
-        choices=["Kilograms (kg)", "Pounds (lbs)"]
-    ).ask()
-    while weight_units is None:
-        print("Please make a selection.")
-        weight_units = questionary.select(
-            "Please select your weight units:",
-            choices=["Kilograms (kg)", "Pounds (lbs)"]
-        ).ask()
+    weight_units = get_selection("Please select your weight units:", ["Kilograms (kg)", "Pounds (lbs)"])
+    
     weight = get_float_input("Please enter your weight: ")
     
     #allows for weight conversion for ease of use
     if weight_units == "Pounds (lbs)":
         weight = convert_to_kg(weight)
-        weight_units = "Kilograms (kg)"
+        weight_units = "Kilograms (kg)" #weight_units variable updated to kg so that the correct formulas can be used
 
-    activity_level = questionary.select(
-        "Please select your activity level:",
-        choices=[
+    activity_level = get_selection("Please select your activity level:",
+        [
             "Sedentary: little or no exercise",
             "Light: exercise 1-3 times per week",
             "Moderate: exercise 4-5 times per week",
             "Very Active: intense exercise 6-7 days per week",
             "Extra Active: very intense exercise daily or physical job"
         ]
-    ).ask()
-    while activity_level is None:
-        print("Please make a selection.")
-        activity_level = questionary.select(
-            "Please select your activity level:",
-            choices=[
-                "Sedentary: little or no exercise",
-                "Light: exercise 1-3 times per week",
-                "Moderate: exercise 4-5 times per week",
-                "Very Active: intense exercise 6-7 days per week",
-                "Extra Active: very intense exercise daily or physical job"
-            ]
-        ).ask()
+    )
+
 
     #user selects goal and error handling in case user cancels the questionary prompt
-    goal = questionary.select(
-        "Please select your goal:",
-        choices=["Weight Loss", "Weight Maintenance", "Weight Gain"]
-    ).ask()
-    while goal is None:
-        print("Please make a selection.")
-        goal = questionary.select(
-            "Please select your goal:",
-            choices=["Weight Loss", "Weight Maintenance", "Weight Gain"]
-        ).ask()
+    goal = get_selection("Please select your goal:",
+        ["Weight Loss", "Weight Maintenance", "Weight Gain"]
+    )
 
     bmr = calculate_bmr(gender, weight, height, age)
     activity_multiplier = get_activity_multiplier(activity_level)
