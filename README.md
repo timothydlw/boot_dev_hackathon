@@ -14,3 +14,7 @@ To use the app:
 **If you run it on MacOS and nothing happens after you run the app, resizing the window should help**
 
 [Link to v1.0.0 release and download links](https://github.com/timothydlw/boot_dev_hackathon/releases/tag/v1.0.0)
+
+<p align="left">
+  <img src="https://api.boot.dev/v1/users/public/53a26caf-d583-4b5b-856e-6c74e3a756aa/thumbnail" >
+</p>
